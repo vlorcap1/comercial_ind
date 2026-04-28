@@ -216,8 +216,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 <nav class="nav-tabs">
   <div class="tab active" onclick="showTab('resumen',this)">Resumen ejecutivo</div>
-  <div class="tab" onclick="showTab('deptos',this)">Departamentos</div>
-  <div class="tab" onclick="showTab('casas',this)">Casas</div>
+  <div class="tab" onclick="showTab('deptos',this)">Dptos — General</div>
+  <div class="tab" onclick="showTab('deptos-ds19',this)">Dptos — Con DS19</div>
+  <div class="tab" onclick="showTab('deptos-libre',this)">Dptos — Sin subsidio</div>
+  <div class="tab" onclick="showTab('casas',this)">Casas — General</div>
+  <div class="tab" onclick="showTab('casas-ds01',this)">Casas — Con DS01</div>
+  <div class="tab" onclick="showTab('casas-libre',this)">Casas — Sin subsidio</div>
   <div class="tab" onclick="showTab('renta',this)">Mercado de renta</div>
   <div class="tab" onclick="showTab('pipeline',this)">Pipeline oferta</div>
   <div class="tab" onclick="showTab('proyectos',this)">Por proyecto</div>
@@ -425,6 +429,284 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
         <div class="sparkline-row"><span class="sparkline-name">Alto Maule</span><div class="mini-track"><div class="mini-fill" style="width:2%;"></div></div><span class="sparkline-val">~5 unid.</span></div>
         <div class="sparkline-row"><span class="sparkline-name">Galilea</span><div class="mini-track"><div class="mini-fill" style="width:2%;"></div></div><span class="sparkline-val">~8 unid.</span></div>
       </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- DPTOS DS19 -->
+<section class="section" id="sec-deptos-ds19">
+  <div style="margin-bottom:16px;">
+    <span style="display:inline-flex;align-items:center;gap:8px;background:rgba(122,182,72,0.12);border:1px solid rgba(122,182,72,0.3);border-radius:8px;padding:8px 16px;font-size:13px;color:var(--up);">
+      <span style="font-size:16px;">🏷</span>
+      <strong>Departamentos CON subsidio DS19</strong> — 6 proyectos · Nov 2025
+    </span>
+  </div>
+  <div class="g4 mb12">
+    <div class="kpi"><div class="kpi-label">Proyectos DS19</div><div class="kpi-value">6</div><div class="kpi-delta neutral">Nov 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Oferta total DS19</div><div class="kpi-value">1.080<span class="kpi-unit">unid</span></div><div class="kpi-delta neutral">36,8% del total</div></div>
+    <div class="kpi"><div class="kpi-label">Stock disponible</div><div class="kpi-value">346<span class="kpi-unit">unid</span></div><div class="kpi-delta up">32,0% — mejor ratio</div></div>
+    <div class="kpi"><div class="kpi-label">Meses stock</div><div class="kpi-value">16,3<span class="kpi-unit">meses</span></div><div class="kpi-delta up">▲ mejor que sin sub.</div></div>
+  </div>
+  <div class="g4 mb20">
+    <div class="kpi"><div class="kpi-label">Precio prom. DS19</div><div class="kpi-value">42,84<span class="kpi-unit">UF/m²</span></div><div class="kpi-delta down">▼ 18,2% vs libre</div></div>
+    <div class="kpi"><div class="kpi-label">Ticket promedio</div><div class="kpi-value">2.412<span class="kpi-unit">UF</span></div><div class="kpi-delta up">▼ 23,3% vs libre</div></div>
+    <div class="kpi"><div class="kpi-label">Vel. histórica</div><div class="kpi-value">4,24<span class="kpi-unit">u/mes</span></div><div class="kpi-delta up">▲ 2,83× vs libre</div></div>
+    <div class="kpi"><div class="kpi-label">Vel. período</div><div class="kpi-value">0,74<span class="kpi-unit">u/mes</span></div><div class="kpi-delta down">▼ vs 0,87 libre</div></div>
+  </div>
+  <div class="g2 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">DS19 vs sin subsidio — comparativa directa</span><span class="sec-badge">Nov 2025</span></div>
+      <div class="chart-wrap" style="height:240px;"><canvas id="ch-ds19-comp" role="img" aria-label="Comparativa DS19 vs sin subsidio en departamentos">DS19 vs libre.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Indicadores clave DS19</span></div>
+      <table class="data-table">
+        <tr><th>Indicador</th><th style="color:var(--up);">Con DS19</th><th style="color:var(--info);">Sin subsidio</th><th>Diferencia</th></tr>
+        <tr><td>Proyectos</td><td class="up bold">6</td><td>25</td><td class="warn">−19</td></tr>
+        <tr><td>Oferta total</td><td class="up bold">1.080</td><td>1.853</td><td>—</td></tr>
+        <tr><td>% Stock</td><td class="up bold">32,0%</td><td class="down">35,6%</td><td class="up">−3,6pp</td></tr>
+        <tr><td>Precio UF/m²</td><td class="up bold">42,84</td><td>52,41</td><td class="down">−9,57</td></tr>
+        <tr><td>Ticket (UF)</td><td class="up bold">2.412</td><td>3.144</td><td class="down">−732</td></tr>
+        <tr><td>Vel. histórica</td><td class="up bold">4,24</td><td>1,50</td><td class="up">+2,74</td></tr>
+        <tr><td>Vel. período</td><td>0,74</td><td class="up bold">0,87</td><td class="warn">−0,13</td></tr>
+        <tr><td>Meses stock</td><td class="up bold">16,33</td><td class="down">18,38</td><td class="up">−2,05</td></tr>
+        <tr><td>Sup. prom. m²</td><td>56,98</td><td>59,27</td><td>−2,3 m²</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="g3 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Proyectos DS19 activos</span></div>
+      <table class="data-table">
+        <tr><th>Proyecto</th><th>Inmob.</th><th>Stock</th><th>% Vend.</th><th>Vel.</th></tr>
+        <tr><td class="bold">Urbano</td><td>Isiete</td><td class="up">0</td><td class="up bold">100%</td><td>3,09</td></tr>
+        <tr><td class="bold">Praderas de Talca</td><td>Brio</td><td class="up">2</td><td class="up">99,1%</td><td class="up">3,65</td></tr>
+        <tr><td class="bold">Ed. Valles S.Valentín</td><td>Independ.</td><td class="up">3</td><td class="up">97,5%</td><td class="up bold">10,36</td></tr>
+        <tr><td class="bold">Jardín Norte</td><td>Boetsch</td><td class="warn">106</td><td class="warn">33,8%</td><td>0,98</td></tr>
+        <tr><td class="bold">Pilares de Talca</td><td>Brio</td><td class="warn">71</td><td class="warn">55,4%</td><td>2,89</td></tr>
+        <tr><td class="bold">Vista Parque III</td><td>Isiete</td><td class="down">164</td><td class="down">13,7%</td><td class="up">3,66</td></tr>
+      </table>
+      <div style="margin-top:8px;font-size:11.5px;color:var(--text3);">3 proyectos prácticamente vendidos. Vista Parque III recién inicia comercialización (7,1 meses en venta).</div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Tipologías DS19 más comunes</span></div>
+      <div class="row-stat"><span class="k">Jardín Norte</span><span class="v">25,6% 2D-1B · 25% 2D-2B · 36,9% 3D-2B</span></div>
+      <div class="row-stat"><span class="k">Pilares de Talca</span><span class="v">25,2% 3D-1B · 74,8% 3D-2B</span></div>
+      <div class="row-stat"><span class="k">Vista Parque III</span><span class="v">18,4% 1D-1B · 40,5% 2D-1B · 41,1% 3D-1B</span></div>
+      <div class="row-stat"><span class="k">Praderas de Talca</span><span class="v">31,8% 2D-2B · 22,7% 3D-1B · 45,5% 3D-2B</span></div>
+      <div class="row-stat"><span class="k">Precio prom. DS19</span><span class="v" style="color:var(--up);">UF 2.412 ticket</span></div>
+      <div class="row-stat"><span class="k">Sup. prom. DS19</span><span class="v">56,98 m²</span></div>
+      <hr style="border:none;border-top:1px solid var(--border2);margin:10px 0;">
+      <div style="font-size:11.5px;color:var(--text3);">El DS19 concentra tipologías 2D y 3D orientadas a familias. Predilección por 3D-2B como tipología ancla.</div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Señales segmento DS19</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="alert-card ok"><span style="font-size:16px;">✓</span><div class="alert-text"><strong>Mayor velocidad histórica:</strong> 4,24 u/mes vs 1,50 del mercado libre. El subsidio dinamiza significativamente la venta.</div></div>
+        <div class="alert-card ok"><span style="font-size:16px;">✓</span><div class="alert-text"><strong>Menor tiempo de stock:</strong> 16,3 meses vs 18,4 sin subsidio. Mejor rotación de inventario.</div></div>
+        <div class="alert-card warn"><span style="font-size:16px;">⚠</span><div class="alert-text"><strong>Vel. período caída:</strong> 0,74 u/mes (Nov) — levemente por debajo del mercado libre (0,87). Señal a monitorear.</div></div>
+        <div class="alert-card info"><span style="font-size:16px;">🏗</span><div class="alert-text"><strong>Pipeline DS19 2025:</strong> 3 proyectos nuevos aprobados por MINVU (577 unidades). Refuerza oferta futura subsidiada.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DPTOS SIN SUBSIDIO -->
+<section class="section" id="sec-deptos-libre">
+  <div style="margin-bottom:16px;">
+    <span style="display:inline-flex;align-items:center;gap:8px;background:rgba(58,184,160,0.1);border:1px solid rgba(58,184,160,0.3);border-radius:8px;padding:8px 16px;font-size:13px;color:var(--info);">
+      <span style="font-size:16px;">🏢</span>
+      <strong>Departamentos SIN subsidio — Mercado libre</strong> — 25 proyectos · Nov 2025
+    </span>
+  </div>
+  <div class="g4 mb12">
+    <div class="kpi"><div class="kpi-label">Proyectos sin subsidio</div><div class="kpi-value">25</div><div class="kpi-delta neutral">Nov 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Oferta total</div><div class="kpi-value">1.853<span class="kpi-unit">unid</span></div><div class="kpi-delta neutral">63,2% del total</div></div>
+    <div class="kpi"><div class="kpi-label">Stock disponible</div><div class="kpi-value">660<span class="kpi-unit">unid</span></div><div class="kpi-delta down">35,6% — mayor que DS19</div></div>
+    <div class="kpi"><div class="kpi-label">Meses stock</div><div class="kpi-value">18,4<span class="kpi-unit">meses</span></div><div class="kpi-delta down">▼ peor que DS19</div></div>
+  </div>
+  <div class="g4 mb20">
+    <div class="kpi"><div class="kpi-label">Precio prom. libre</div><div class="kpi-value">52,41<span class="kpi-unit">UF/m²</span></div><div class="kpi-delta up">▲ 22,3% vs DS19</div></div>
+    <div class="kpi"><div class="kpi-label">Ticket promedio</div><div class="kpi-value">3.144<span class="kpi-unit">UF</span></div><div class="kpi-delta down">▲ vs UF 2.412 DS19</div></div>
+    <div class="kpi"><div class="kpi-label">Vel. histórica</div><div class="kpi-value">1,50<span class="kpi-unit">u/mes</span></div><div class="kpi-delta down">▼ 2,83× menor que DS19</div></div>
+    <div class="kpi"><div class="kpi-label">Vel. período</div><div class="kpi-value">0,87<span class="kpi-unit">u/mes</span></div><div class="kpi-delta up">▲ vs 0,74 DS19 (período)</div></div>
+  </div>
+  <div class="g2 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Precio UF/m² por tipología — mercado libre</span><span class="sec-badge">Nov 2025</span></div>
+      <div class="chart-wrap" style="height:240px;"><canvas id="ch-libre-tipo" role="img" aria-label="Precio UF m2 por tipología mercado libre departamentos">Tipologías libre.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Top proyectos sin subsidio — precio y velocidad</span></div>
+      <table class="data-table">
+        <tr><th>Proyecto</th><th>UF/m²</th><th>Vel. hist.</th><th>% Vend.</th><th>Stock</th></tr>
+        <tr><td class="bold">Ed. Hac. Esmeralda III</td><td class="up bold">72,21</td><td class="up">2,48</td><td class="up">97,1%</td><td class="up">2</td></tr>
+        <tr><td class="bold">Ed. Cordillera</td><td class="up">70,79</td><td>0,77</td><td class="up">91,3%</td><td class="up">4</td></tr>
+        <tr><td class="bold">Barrio Alameda I</td><td class="up">68,71</td><td>1,53</td><td class="up">98,5%</td><td class="up">2</td></tr>
+        <tr><td class="bold">Raíces</td><td>67,09</td><td>1,00</td><td>87,8%</td><td>9</td></tr>
+        <tr><td class="bold">5 Norte Las Rastras</td><td>64,48</td><td>1,21</td><td class="up">98,9%</td><td class="up">1</td></tr>
+        <tr><td class="bold">Cond. Arrayan</td><td>45,39</td><td class="up">3,77</td><td class="down">23,8%</td><td class="down">122</td></tr>
+        <tr><td class="bold">Cond. Altos Lircay II</td><td>45,22</td><td class="up">3,71</td><td>84,8%</td><td class="warn">31</td></tr>
+        <tr><td class="bold">Vista La Viña III</td><td>44,97</td><td>0,73</td><td>87,5%</td><td>2</td></tr>
+        <tr><td class="bold">Edificio DockSur</td><td>63,49</td><td>1,73</td><td class="down">20,0%</td><td class="down">112</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="g3 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Distribución por inmobiliaria — libre</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div class="sparkline-row"><span class="sparkline-name">Pocuro</span><div class="mini-track"><div class="mini-fill" style="width:30%;"></div></div><span class="sparkline-val">3 proy. ~207 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Malpo</span><div class="mini-track"><div class="mini-fill" style="width:19%;"></div></div><span class="sparkline-val">2 proy. ~127 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">FDI</span><div class="mini-track"><div class="mini-fill" style="width:16%;"></div></div><span class="sparkline-val">1 proy. ~112 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Galilea</span><div class="mini-track"><div class="mini-fill" style="width:8%;"></div></div><span class="sparkline-val">8 proy. ~54 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Digua</span><div class="mini-track"><div class="mini-fill" style="width:7%;"></div></div><span class="sparkline-val">2 proy. ~5 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">FAI</span><div class="mini-track"><div class="mini-fill" style="width:7%;"></div></div><span class="sparkline-val">2 proy. ~60 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Vitalia</span><div class="mini-track"><div class="mini-fill" style="width:6%;"></div></div><span class="sparkline-val">1 proy. ~41 unid.</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Rendimiento tramos m² — mercado libre</span></div>
+      <div class="row-stat"><span class="k">30–45 m²</span><span class="v">68,54 UF/m² · vel 0,95 · 34,8% stk</span></div>
+      <div class="row-stat"><span class="k">45–60 m²</span><span class="v">53,58 UF/m² · vel 2,00 · 37,2% stk</span></div>
+      <div class="row-stat"><span class="k">60–75 m²</span><span class="v">44,30 UF/m² · vel 0,98 · 36,3% stk</span></div>
+      <div class="row-stat"><span class="k">75–90 m²</span><span class="v">49,68 UF/m² · vel 0,40 · 15,2% stk</span></div>
+      <div class="row-stat"><span class="k">&gt; 90 m²</span><span class="v">53,47 UF/m² · vel 0,32 · 20,0% stk</span></div>
+      <hr style="border:none;border-top:1px solid var(--border2);margin:10px 0;">
+      <div style="font-size:11.5px;color:var(--text3);">Mayor vel. en 45–60m². Seg. premium (+90m²) sin descuentos pero vel. más baja.</div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Señales segmento libre</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="alert-card warn"><span style="font-size:16px;">⚠</span><div class="alert-text"><strong>Mayor stock acumulado:</strong> 660 unidades y 18,4 meses — más lento que DS19 en rotación.</div></div>
+        <div class="alert-card ok"><span style="font-size:16px;">✓</span><div class="alert-text"><strong>Precio resiste:</strong> 52,41 UF/m² sostenido. Descuento prom. solo 3,02% — sin liquidaciones.</div></div>
+        <div class="alert-card ok"><span style="font-size:16px;">✓</span><div class="alert-text"><strong>Vel. período superior:</strong> 0,87 u/mes vs 0,74 DS19. El mercado libre mueve más en el corto plazo reciente.</div></div>
+        <div class="alert-card danger"><span style="font-size:16px;">⚠</span><div class="alert-text"><strong>Proyectos críticos:</strong> Arrayán (76,3% stock), DockSur (80%), Ed. Hac. Esmeralda IV (85,7%) concentran riesgo.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASAS DS01 -->
+<section class="section" id="sec-casas-ds01">
+  <div style="margin-bottom:16px;">
+    <span style="display:inline-flex;align-items:center;gap:8px;background:rgba(122,182,72,0.12);border:1px solid rgba(122,182,72,0.3);border-radius:8px;padding:8px 16px;font-size:13px;color:var(--up);">
+      <span style="font-size:16px;">🏠</span>
+      <strong>Casas CON subsidio DS01</strong> — 2 proyectos · Nov 2025
+    </span>
+  </div>
+  <div class="g4 mb12">
+    <div class="kpi"><div class="kpi-label">Proyectos DS01</div><div class="kpi-value">2</div><div class="kpi-delta up">Nov 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Oferta total DS01</div><div class="kpi-value">159<span class="kpi-unit">unid</span></div><div class="kpi-delta neutral">17% del total casas</div></div>
+    <div class="kpi"><div class="kpi-label">Stock disponible</div><div class="kpi-value">13<span class="kpi-unit">unid</span></div><div class="kpi-delta up bold">8,2% — excepcional</div></div>
+    <div class="kpi"><div class="kpi-label">Meses stock</div><div class="kpi-value">3,6<span class="kpi-unit">meses</span></div><div class="kpi-delta up bold">Mejor del mercado</div></div>
+  </div>
+  <div class="g4 mb20">
+    <div class="kpi"><div class="kpi-label">Precio prom. DS01</div><div class="kpi-value">32,45<span class="kpi-unit">UF/m²</span></div><div class="kpi-delta down">▼ 15,4% vs libre</div></div>
+    <div class="kpi"><div class="kpi-label">Ticket promedio</div><div class="kpi-value">1.479<span class="kpi-unit">UF</span></div><div class="kpi-delta up">Accesible — 2,3× menor</div></div>
+    <div class="kpi"><div class="kpi-label">Vel. histórica</div><div class="kpi-value">1,80<span class="kpi-unit">u/mes</span></div><div class="kpi-delta up">▲ vs 1,26 libre</div></div>
+    <div class="kpi"><div class="kpi-label">Vel. período</div><div class="kpi-value">0,98<span class="kpi-unit">u/mes</span></div><div class="kpi-delta up">▲ vs 1,12 libre</div></div>
+  </div>
+  <div class="g2 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">DS01 vs sin subsidio — casas comparativa</span><span class="sec-badge">Nov 2025</span></div>
+      <div class="chart-wrap" style="height:240px;"><canvas id="ch-ds01-comp" role="img" aria-label="Comparativa DS01 vs sin subsidio en casas">DS01 vs libre casas.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Indicadores clave DS01 — casas</span></div>
+      <table class="data-table">
+        <tr><th>Indicador</th><th style="color:var(--up);">Con DS01</th><th style="color:var(--info);">Sin subsidio</th><th>Diferencia</th></tr>
+        <tr><td>Proyectos</td><td class="up bold">2</td><td>13</td><td>—</td></tr>
+        <tr><td>Oferta total</td><td>159</td><td>778</td><td>—</td></tr>
+        <tr><td>% Stock</td><td class="up bold">8,2%</td><td class="down">41,1%</td><td class="up">−32,9pp</td></tr>
+        <tr><td>Precio UF/m²</td><td>32,45</td><td>38,37</td><td class="down">−5,92</td></tr>
+        <tr><td>Ticket (UF)</td><td class="up bold">1.479</td><td>3.348</td><td class="down">−1.869</td></tr>
+        <tr><td>Vel. histórica</td><td class="up bold">1,80</td><td>1,26</td><td class="up">+0,54</td></tr>
+        <tr><td>Meses stock</td><td class="up bold">3,62</td><td class="down">23,06</td><td class="up">−19,44</td></tr>
+        <tr><td>Sup. útil prom.</td><td>45,54 m²</td><td>85,90 m²</td><td>−40,4 m²</td></tr>
+        <tr><td>Sup. terreno</td><td>158,77 m²</td><td>191,90 m²</td><td>−33,1 m²</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="g2 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Proyectos DS01 activos</span></div>
+      <table class="data-table">
+        <tr><th>Proyecto</th><th>Inmob.</th><th>Unid. tot.</th><th>Stock</th><th>% Vend.</th><th>Vel. hist.</th></tr>
+        <tr><td class="bold">El Portal de Talca II</td><td>Habicasa</td><td>135</td><td class="up bold">12</td><td class="up bold">91,1%</td><td class="up">2,33</td></tr>
+        <tr><td class="bold">Doña Antonia 5-X</td><td>Galilea</td><td>63</td><td class="warn">39</td><td class="warn">38,1%</td><td>1,26</td></tr>
+      </table>
+      <hr style="border:none;border-top:1px solid var(--border2);margin:12px 0;">
+      <div style="font-size:13px;color:var(--text2);">
+        <div class="row-stat"><span class="k">Tipología El Portal</span><span class="v">100% 2D-1B · 45,3 m²</span></div>
+        <div class="row-stat"><span class="k">Tipología Doña Antonia</span><span class="v">79,2% 2D-1B · 20,8% 3D-2B</span></div>
+        <div class="row-stat"><span class="k">Precio El Portal</span><span class="v" style="color:var(--up);">32,01 UF/m² · UF 1.450</span></div>
+        <div class="row-stat"><span class="k">Precio Doña Antonia</span><span class="v">37,76 UF/m² · UF 1.830</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Señales segmento DS01 — casas</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="alert-card ok"><span style="font-size:16px;">🏆</span><div class="alert-text"><strong>Mejor segmento del mercado:</strong> solo 8,2% de stock residual — 91,8% vendido. Absorción casi total.</div></div>
+        <div class="alert-card ok"><span style="font-size:16px;">✓</span><div class="alert-text"><strong>Rotación rapidísima:</strong> 3,62 meses para agotar stock — 6,4 veces más rápido que casas sin subsidio (23,1 meses).</div></div>
+        <div class="alert-card ok"><span style="font-size:16px;">✓</span><div class="alert-text"><strong>Ticket más accesible:</strong> UF 1.479 vs UF 3.348 libre. El subsidio democratiza el acceso a la vivienda propia.</div></div>
+        <div class="alert-card warn"><span style="font-size:16px;">⚠</span><div class="alert-text"><strong>Oferta escasa:</strong> Solo 2 proyectos, 159 unidades. La demanda supera ampliamente la oferta disponible DS01.</div></div>
+        <div class="alert-card info"><span style="font-size:16px;">📋</span><div class="alert-text"><strong>Superficies menores:</strong> 45,54 m² útil y 158,77 m² terreno — producto más compacto orientado a vulnerabilidad social.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASAS SIN SUBSIDIO -->
+<section class="section" id="sec-casas-libre">
+  <div style="margin-bottom:16px;">
+    <span style="display:inline-flex;align-items:center;gap:8px;background:rgba(58,184,160,0.1);border:1px solid rgba(58,184,160,0.3);border-radius:8px;padding:8px 16px;font-size:13px;color:var(--info);">
+      <span style="font-size:16px;">🏡</span>
+      <strong>Casas SIN subsidio — Mercado libre</strong> — 13 proyectos · Nov 2025
+    </span>
+  </div>
+  <div class="g4 mb12">
+    <div class="kpi"><div class="kpi-label">Proyectos sin subsidio</div><div class="kpi-value">13</div><div class="kpi-delta neutral">Nov 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Oferta total</div><div class="kpi-value">778<span class="kpi-unit">unid</span></div><div class="kpi-delta neutral">83% del total casas</div></div>
+    <div class="kpi"><div class="kpi-label">Stock disponible</div><div class="kpi-value">320<span class="kpi-unit">unid</span></div><div class="kpi-delta down">41,1% — riesgo alto</div></div>
+    <div class="kpi"><div class="kpi-label">Meses stock</div><div class="kpi-value">23,1<span class="kpi-unit">meses</span></div><div class="kpi-delta down">Mayor del mercado</div></div>
+  </div>
+  <div class="g4 mb20">
+    <div class="kpi"><div class="kpi-label">Precio prom. libre</div><div class="kpi-value">38,37<span class="kpi-unit">UF/m²</span></div><div class="kpi-delta up">▲ 18,2% vs DS01</div></div>
+    <div class="kpi"><div class="kpi-label">Ticket promedio</div><div class="kpi-value">3.348<span class="kpi-unit">UF</span></div><div class="kpi-delta down">▲ 2,3× vs DS01</div></div>
+    <div class="kpi"><div class="kpi-label">Vel. histórica</div><div class="kpi-value">1,26<span class="kpi-unit">u/mes</span></div><div class="kpi-delta down">▼ vs 1,80 DS01</div></div>
+    <div class="kpi"><div class="kpi-label">Sup. prom. útil</div><div class="kpi-value">85,9<span class="kpi-unit">m²</span></div><div class="kpi-delta neutral">Terreno 191,9 m²</div></div>
+  </div>
+  <div class="g2 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Proyectos sin subsidio — rendimiento</span><span class="sec-badge">Nov 2025</span></div>
+      <table class="data-table">
+        <tr><th>Proyecto</th><th>Inmob.</th><th>UF/m²</th><th>Vel. hist.</th><th>% Vend.</th><th>Stock</th></tr>
+        <tr><td class="bold">Cond. Hac. Esmeralda II</td><td>Independ.</td><td class="up">52,72</td><td class="up bold">2,52</td><td>38,6%</td><td class="warn">29</td></tr>
+        <tr><td class="bold">Alto Manque I</td><td>Malpo</td><td class="up">53,59</td><td class="up">1,47</td><td class="up">91,3%</td><td class="up">7</td></tr>
+        <tr><td class="bold">Cond. Parque S.Valentín</td><td>Independ.</td><td>42,39</td><td>1,52</td><td class="warn">27,1%</td><td class="warn">29 (*2)</td></tr>
+        <tr><td class="bold">Hacienda Del Maule IV</td><td>Pocuro</td><td>46,14</td><td>1,51</td><td class="warn">37,4%</td><td class="warn">0 (*)</td></tr>
+        <tr><td class="bold">Cond. Almeria</td><td>Alto Maule</td><td>44,79</td><td>0,92</td><td class="up">90,0%</td><td class="up">5</td></tr>
+        <tr><td class="bold">Puertas del Sur</td><td>Malpo</td><td>38,18</td><td>1,39</td><td class="up">64,2%</td><td>0</td></tr>
+        <tr><td class="bold">Parque S.Valentín IV</td><td>Independ.</td><td>56,79</td><td>0,46</td><td class="warn">37,4%</td><td class="down">82</td></tr>
+        <tr><td class="bold">Doña Ignacia</td><td>Malpo</td><td class="down">26,99</td><td>0,52</td><td class="down">21,6%</td><td class="down">91</td></tr>
+      </table>
+      <div style="margin-top:8px;font-size:11px;color:var(--text3);">(*) Vendido en período anterior, sin stock actual.</div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Señales segmento libre — casas</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="alert-card danger"><span style="font-size:16px;">⚠</span><div class="alert-text"><strong>Mayor riesgo del mercado:</strong> 41,1% de stock disponible y 23,1 meses para agotar — señal de sobreoferta relativa.</div></div>
+        <div class="alert-card danger"><span style="font-size:16px;">⚠</span><div class="alert-text"><strong>Doña Ignacia:</strong> 78,5% de stock (91 unidades), precio bajo 26,99 UF/m² y vel. 0,52 — proyecto en alerta.</div></div>
+        <div class="alert-card warn"><span style="font-size:16px;">⚠</span><div class="alert-text"><strong>Parque S. Valentín IV:</strong> 62,6% stock (82 unid.), precio premium 56,79 UF/m² con baja absorción 0,46 u/mes.</div></div>
+        <div class="alert-card ok"><span style="font-size:16px;">✓</span><div class="alert-text"><strong>Precio resiste:</strong> 38,37 UF/m² con descuento promedio de solo 3,13%. Los desarrolladores no liquidan.</div></div>
+        <div class="alert-card ok"><span style="font-size:16px;">✓</span><div class="alert-text"><strong>Proyectos maduros con buen ritmo:</strong> Alto Manque I (91,3% vendido) y Almeria (90%) demuestran que el producto bien posicionado se vende.</div></div>
+      </div>
+      <hr style="border:none;border-top:1px solid var(--border2);margin:12px 0;">
+      <div class="row-stat"><span class="k">Vel. período Nov 2025</span><span class="v">1,12 u/mes</span></div>
+      <div class="row-stat"><span class="k">Sup. terreno prom.</span><span class="v">191,90 m²</span></div>
+      <div class="row-stat"><span class="k">Tipología dominante</span><span class="v">3D-2B (87,06 m²)</span></div>
     </div>
   </div>
 </section>
@@ -777,6 +1059,52 @@ function initCharts() {
         y: { ticks: { color: tCol, font: { size: 10 }, callback: v => v + '%' }, grid: { color: gCol }, min: 2.5 }
       }
     }
+  });
+
+  // DS19 vs libre comparativa
+  new Chart(document.getElementById('ch-ds19-comp'), {
+    type: 'bar',
+    data: {
+      labels: ['Precio\nUF/m²', 'Vel. hist.\nu/mes', 'Meses\nstock', 'Ticket\nUF÷100', 'Stock\n%'],
+      datasets: [
+        { label: 'Con DS19', data: [42.84, 4.24, 16.33, 24.12, 32.0], backgroundColor: 'rgba(122,182,72,0.8)', borderRadius: 4 },
+        { label: 'Sin subsidio', data: [52.41, 1.50, 18.38, 31.44, 35.6], backgroundColor: 'rgba(58,184,160,0.7)', borderRadius: 4 }
+      ]
+    },
+    options: { ...baseOpts }
+  });
+
+  // Libre tipologías
+  new Chart(document.getElementById('ch-libre-tipo'), {
+    type: 'bar',
+    data: {
+      labels: ['1D-1B','2D-1B','2D-2B','3D-1B','3D-2B','3D-3B','4D-4B'],
+      datasets: [
+        { label: 'UF/m²', data: [68.5, 51.3, 56.2, 41.3, 45.4, 64.5, 70.8], backgroundColor: 'rgba(58,184,160,0.75)', borderRadius: 3, yAxisID: 'y' },
+        { label: 'Vel.', data: [0.92, 0.74, 1.01, null, 1.06, 0.38, 0.58], type: 'line', borderColor: '#f0b429', backgroundColor: 'transparent', tension: 0.3, pointRadius: 5, yAxisID: 'y2', borderWidth: 2 }
+      ]
+    },
+    options: {
+      ...baseOpts,
+      scales: {
+        x: { ticks: { color: tCol, font: { size: 10 } }, grid: { color: gCol } },
+        y: { ticks: { color: tCol, font: { size: 10 } }, grid: { color: gCol }, position: 'left' },
+        y2: { ticks: { color: 'rgba(240,180,41,0.5)', font: { size: 10 } }, grid: { display: false }, position: 'right' }
+      }
+    }
+  });
+
+  // DS01 vs libre casas
+  new Chart(document.getElementById('ch-ds01-comp'), {
+    type: 'bar',
+    data: {
+      labels: ['Precio\nUF/m²', 'Vel. hist.\nu/mes', 'Meses\nstock', 'Ticket\nUF÷100', 'Stock\n%'],
+      datasets: [
+        { label: 'Con DS01', data: [32.45, 1.80, 3.62, 14.79, 8.2], backgroundColor: 'rgba(122,182,72,0.8)', borderRadius: 4 },
+        { label: 'Sin subsidio', data: [38.37, 1.26, 23.06, 33.48, 41.1], backgroundColor: 'rgba(58,184,160,0.7)', borderRadius: 4 }
+      ]
+    },
+    options: { ...baseOpts }
   });
 }
 </script>
