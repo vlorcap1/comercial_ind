@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mercado Inmobiliario Talca — BMI</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-dark: #1a6b4a;
+  --green-mid: #217a54;
+  --green-light: #7ab648;
+  --green-lime: #a0c840;
+  --green-teal: #0e8a6a;
+  --bg: #0d1f17;
+  --bg-card: #122018;
+  --bg-card2: #162b1f;
+  --border: rgba(122,182,72,0.12);
+  --border2: rgba(255,255,255,0.06);
+  --text: #e8f5e0;
+  --text2: #8ab899;
+  --text3: #4a7a5a;
+  --up: #7ab648;
+  --down: #e86040;
+  --warn: #f0b429;
+  --info: #3ab8a0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;}
+
+/* LOGIN */
+#login-screen {
+  position:fixed;inset:0;background:var(--bg);z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+}
+.login-box {
+  background:var(--bg-card);border:1px solid var(--border);border-radius:20px;
+  padding:48px 44px;width:400px;text-align:center;
+  box-shadow:0 24px 80px rgba(0,0,0,0.5);
+}
+.login-logo { width:72px;height:72px;margin:0 auto 24px;display:block; }
+.login-title { font-size:22px;font-weight:600;color:var(--text);margin-bottom:4px; }
+.login-sub { font-size:13px;color:var(--text2);margin-bottom:32px; }
+.login-label { display:block;text-align:left;font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px; }
+.login-input {
+  width:100%;padding:12px 16px;border-radius:10px;border:1px solid var(--border);
+  background:var(--bg);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;
+  outline:none;transition:border-color .2s;margin-bottom:16px;
+}
+.login-input:focus{border-color:var(--green-light);}
+.login-btn {
+  width:100%;padding:13px;border-radius:10px;border:none;
+  background:var(--green-mid);color:#fff;font-size:15px;font-weight:500;
+  font-family:'DM Sans',sans-serif;cursor:pointer;transition:background .2s;
+}
+.login-btn:hover{background:var(--green-teal);}
+.login-err{color:var(--down);font-size:13px;margin-top:10px;min-height:20px;}
+.login-footer{font-size:11px;color:var(--text3);margin-top:24px;}
+
+/* APP */
+#app{display:none;}
+
+/* HEADER */
+.header {
+  background:var(--bg-card);border-bottom:1px solid var(--border);
+  padding:16px 32px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.header-left{display:flex;align-items:center;gap:14px;}
+.header-logo{width:42px;height:42px;border-radius:10px;object-fit:cover;}
+.header-brand{font-size:17px;font-weight:600;color:var(--text);}
+.header-sub{font-size:11px;color:var(--text2);}
+.header-right{display:flex;gap:8px;align-items:center;}
+.pill{display:inline-flex;align-items:center;gap:6px;background:rgba(122,182,72,0.08);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--text2);}
+.pill-dot{width:6px;height:6px;border-radius:50%;background:var(--green-light);}
+.pill-dot.warn{background:var(--warn);}
+.logout-btn{background:transparent;border:1px solid var(--border);color:var(--text2);padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.logout-btn:hover{border-color:var(--down);color:var(--down);}
+
+/* NAV */
+.nav-tabs{background:var(--bg-card2);border-bottom:1px solid var(--border2);padding:0 32px;display:flex;gap:0;overflow-x:auto;}
+.tab{padding:13px 18px;font-size:13px;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
+.tab:hover{color:var(--text2);}
+.tab.active{color:var(--green-light);border-bottom-color:var(--green-light);}
+
+/* MAIN */
+.main{padding:24px 32px;max-width:1600px;margin:0 auto;}
+.section{display:none;}
+.section.active{display:block;}
+
+/* GRIDS */
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:12px;}
+.mb12{margin-bottom:12px;}
+.mb20{margin-bottom:20px;}
+
+/* CARDS */
+.card{background:var(--bg-card);border:1px solid var(--border2);border-radius:12px;padding:18px 20px;position:relative;overflow:hidden;transition:border-color .2s;}
+.card:hover{border-color:rgba(122,182,72,0.2);}
+
+/* KPI */
+.kpi{background:var(--bg-card);border:1px solid var(--border2);border-radius:10px;padding:16px 18px;}
+.kpi-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.kpi-value{font-size:26px;font-weight:600;color:var(--text);line-height:1;font-variant-numeric:tabular-nums;}
+.kpi-unit{font-size:13px;font-weight:400;color:var(--text2);margin-left:3px;}
+.kpi-delta{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;padding:2px 8px;border-radius:20px;font-weight:500;}
+.kpi-delta.up{background:rgba(122,182,72,0.12);color:var(--up);}
+.kpi-delta.down{background:rgba(232,96,64,0.12);color:var(--down);}
+.kpi-delta.neutral{background:rgba(240,180,41,0.12);color:var(--warn);}
+
+/* SECTION HEAD */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sec-title{font-size:12px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;}
+.sec-badge{font-family:'DM Mono',monospace;font-size:11px;color:var(--green-light);background:rgba(122,182,72,0.1);padding:3px 8px;border-radius:4px;}
+
+/* CHART */
+.chart-wrap{position:relative;width:100%;}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.data-table th{text-align:left;padding:8px 10px;font-size:10.5px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border2);}
+.data-table td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--text2);font-variant-numeric:tabular-nums;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(122,182,72,0.03);color:var(--text);}
+.data-table td.bold{font-weight:600;color:var(--text);}
+.data-table td.up{color:var(--up);}
+.data-table td.down{color:var(--down);}
+.data-table td.warn{color:var(--warn);}
+.badge{display:inline-flex;align-items:center;font-size:10px;padding:2px 7px;border-radius:4px;font-weight:500;}
+.b-up{background:rgba(122,182,72,0.15);color:var(--up);}
+.b-down{background:rgba(232,96,64,0.15);color:var(--down);}
+.b-info{background:rgba(58,184,160,0.15);color:var(--info);}
+.b-warn{background:rgba(240,180,41,0.15);color:var(--warn);}
+
+/* ROW STAT */
+.row-stat{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px;}
+.row-stat:last-child{border-bottom:none;}
+.row-stat .k{color:var(--text3);}
+.row-stat .v{font-weight:500;color:var(--text);}
+
+/* ALERT CARDS */
+.alert-card{border:1px solid;border-radius:8px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;}
+.alert-card.danger{border-color:rgba(232,96,64,0.3);background:rgba(232,96,64,0.06);}
+.alert-card.warn{border-color:rgba(240,180,41,0.3);background:rgba(240,180,41,0.06);}
+.alert-card.info{border-color:rgba(58,184,160,0.3);background:rgba(58,184,160,0.06);}
+.alert-card.ok{border-color:rgba(122,182,72,0.3);background:rgba(122,182,72,0.06);}
+.alert-text{font-size:12.5px;color:var(--text2);line-height:1.5;}
+.alert-text strong{color:var(--text);font-weight:500;}
+
+/* SPARKLINE */
+.sparkline-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.sparkline-row:last-child{border-bottom:none;}
+.sparkline-name{flex:1;font-size:12px;color:var(--text2);}
+.sparkline-val{font-size:13px;font-weight:500;color:var(--text);min-width:70px;text-align:right;}
+.mini-track{flex:1;background:rgba(255,255,255,0.05);border-radius:3px;height:5px;margin:0 8px;}
+.mini-fill{height:5px;border-radius:3px;background:var(--green-light);}
+
+/* DONUT LEGEND */
+.donut-legend{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px;}
+.dl-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);}
+.dl-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+
+/* FOOTER */
+.footer{text-align:center;padding:20px;font-size:11px;color:var(--text3);border-top:1px solid var(--border2);margin-top:32px;}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:10px;}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text3);}
+.leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+
+@media(max-width:900px){
+  .g4,.g3{grid-template-columns:1fr 1fr;}
+  .g21{grid-template-columns:1fr;}
+  .main{padding:16px;}
+  .header{padding:12px 16px;}
+  .nav-tabs{padding:0 12px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <img class="login-logo" src="data:image/png;base64,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" alt="BMI logo">
+    <div class="login-title">Mercado Inmobiliario</div>
+    <div class="login-sub">Talca — VII Región · Estudio BMI 2025–2026</div>
+    <label class="login-label">Contraseña de acceso</label>
+    <input type="password" class="login-input" id="pwd-input" placeholder="••••••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Ingresar al estudio</button>
+    <div class="login-err" id="login-err"></div>
+    <div class="login-footer">Acceso restringido — BMI Servicios Inmobiliarios</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+<header class="header">
+  <div class="header-left">
+    <img class="header-logo" src="data:image/png;base64,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" alt="BMI">
+    <div>
+      <div class="header-brand">Mercado Inmobiliario — Talca</div>
+      <div class="header-sub">Estudio BMI · Jul 2025 · Nov 2025 · Mar 2026 · VII Región</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="pill"><span class="pill-dot"></span>31 proyectos dptos</span>
+    <span class="pill"><span class="pill-dot warn"></span>17,1 meses stock</span>
+    <button class="logout-btn" onclick="doLogout()">Cerrar sesión</button>
+  </div>
+</header>
+
+<nav class="nav-tabs">
+  <div class="tab active" onclick="showTab('resumen',this)">Resumen ejecutivo</div>
+  <div class="tab" onclick="showTab('deptos',this)">Departamentos</div>
+  <div class="tab" onclick="showTab('casas',this)">Casas</div>
+  <div class="tab" onclick="showTab('renta',this)">Mercado de renta</div>
+  <div class="tab" onclick="showTab('pipeline',this)">Pipeline oferta</div>
+  <div class="tab" onclick="showTab('proyectos',this)">Por proyecto</div>
+</nav>
+
+<main class="main">
+
+<!-- RESUMEN -->
+<section class="section active" id="sec-resumen">
+  <div class="g4 mb12">
+    <div class="kpi"><div class="kpi-label">Stock dptos disponibles</div><div class="kpi-value">1.006<span class="kpi-unit">unid</span></div><div class="kpi-delta down">▼ 7,1% vs Jul 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Stock casas disponibles</div><div class="kpi-value">333<span class="kpi-unit">unid</span></div><div class="kpi-delta down">▼ 17,8% vs Jul 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Precio prom. dptos</div><div class="kpi-value">49,12<span class="kpi-unit">UF/m²</span></div><div class="kpi-delta up">▲ +2,1% vs Jul 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Meses para agotar stock</div><div class="kpi-value">17,1<span class="kpi-unit">meses</span></div><div class="kpi-delta down">▲ desde 14,0 Jul 2025</div></div>
+  </div>
+  <div class="g4 mb20">
+    <div class="kpi"><div class="kpi-label">Ticket prom. dptos</div><div class="kpi-value">2.892<span class="kpi-unit">UF</span></div><div class="kpi-delta neutral">= Estable 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Ticket prom. casas</div><div class="kpi-value">3.275<span class="kpi-unit">UF</span></div><div class="kpi-delta up">▲ +0,4% vs Jul 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Rentabilidad dptos</div><div class="kpi-value">4,25<span class="kpi-unit">%</span></div><div class="kpi-delta neutral">Estable</div></div>
+    <div class="kpi"><div class="kpi-label">Rentabilidad casas</div><div class="kpi-value">4,68<span class="kpi-unit">%</span></div><div class="kpi-delta up">Mayor que dptos</div></div>
+  </div>
+  <div class="g21 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Evolución oferta y stock — Departamentos (2023–2026)</span><span class="sec-badge">9 períodos</span></div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#7ab648;"></div>Oferta total</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#e86040;"></div>Stock disponible</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#3ab8a0;"></div>Ventas acumuladas</div>
+      </div>
+      <div class="chart-wrap" style="height:240px;"><canvas id="ch-evolucion" role="img" aria-label="Evolución oferta stock ventas dptos Talca 2023 2026">Evolución departamentos.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Velocidad de venta período</span></div>
+      <div class="chart-wrap" style="height:190px;"><canvas id="ch-vel" role="img" aria-label="Velocidad venta histórica y del período departamentos">Velocidad de venta.</canvas></div>
+      <div style="margin-top:14px;">
+        <div class="row-stat"><span class="k">Vel. histórica Nov 2025</span><span class="v" style="color:var(--green-light);">2,03 u/mes</span></div>
+        <div class="row-stat"><span class="k">Vel. período Nov 2025</span><span class="v" style="color:var(--down);">0,56 u/mes</span></div>
+        <div class="row-stat"><span class="k">Caída respecto Jul 2025</span><span class="v" style="color:var(--down);">−52,5%</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="g3 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Alertas del mercado</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="alert-card danger"><span style="font-size:16px;">⚠</span><div class="alert-text"><strong>Absorción en caída:</strong> vel. período bajó de 1,18 (Jul) a 0,56 (Nov). Mínimo del período analizado.</div></div>
+        <div class="alert-card warn"><span style="font-size:16px;">⏳</span><div class="alert-text"><strong>Stock crítico:</strong> 17,1 meses dptos y 19,2 meses casas — máximo período.</div></div>
+        <div class="alert-card info"><span style="font-size:16px;">🏗</span><div class="alert-text"><strong>Pipeline:</strong> 9 permisos (967 unid.) + 5 anteproyectos (250 unid.) en ingreso futuro.</div></div>
+        <div class="alert-card ok"><span style="font-size:16px;">✓</span><div class="alert-text"><strong>Precio resiste:</strong> UF/m² dptos sube a 49,1 (+2,1%). Sin descuentos agresivos.</div></div>
+        <div class="alert-card ok"><span style="font-size:16px;">✓</span><div class="alert-text"><strong>DS19 MINVU 2025:</strong> 3 proyectos aprobados → 577 nuevas unidades.</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">KPI avance de venta por segmento</span></div>
+      <table class="data-table">
+        <tr><th>Segmento</th><th>Vendido</th><th>Stock %</th><th>Meses</th></tr>
+        <tr><td class="bold">Dptos total</td><td class="up">65,7%</td><td class="warn">34,3%</td><td class="down">17,1</td></tr>
+        <tr><td>— Con DS19</td><td class="up">68,0%</td><td>32,0%</td><td>16,3</td></tr>
+        <tr><td>— Sin subsidio</td><td>64,4%</td><td class="down">35,6%</td><td class="down">18,4</td></tr>
+        <tr><td class="bold">Casas total</td><td class="up">64,5%</td><td class="warn">35,5%</td><td class="down">19,2</td></tr>
+        <tr><td>— Con DS01</td><td class="up">91,8%</td><td class="up">8,2%</td><td class="up">3,6</td></tr>
+        <tr><td>— Sin subsidio</td><td>58,9%</td><td class="down">41,1%</td><td class="down">23,1</td></tr>
+      </table>
+      <hr style="border:none;border-top:1px solid var(--border2);margin:12px 0;">
+      <div style="font-size:11.5px;color:var(--text3);">DS01 en casas: mejor performance — solo 3,6 meses de stock, 91,8% vendido.</div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Descuentos y superficie</span></div>
+      <div class="row-stat"><span class="k">Descuento prom. dptos</span><span class="v">3,02%</span></div>
+      <div class="row-stat"><span class="k">Descuento prom. casas</span><span class="v">3,13%</span></div>
+      <div class="row-stat"><span class="k">Mayor desc. (30–45m²)</span><span class="v" style="color:var(--down);">5,60%</span></div>
+      <div class="row-stat"><span class="k">Menor desc. (+90m²)</span><span class="v" style="color:var(--up);">0,00%</span></div>
+      <div class="row-stat"><span class="k">Sup. útil prom. dptos</span><span class="v">58,48 m²</span></div>
+      <div class="row-stat"><span class="k">Sup. útil prom. casas</span><span class="v">84,33 m²</span></div>
+      <div class="row-stat"><span class="k">Sup. terreno prom. casas</span><span class="v">190,61 m²</span></div>
+      <div class="row-stat"><span class="k">Estacionamiento prom.</span><span class="v">248,6 UF</span></div>
+      <div class="row-stat"><span class="k">Bodega prom.</span><span class="v">102,7 UF</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPARTAMENTOS -->
+<section class="section" id="sec-deptos">
+  <div class="g4 mb12">
+    <div class="kpi"><div class="kpi-label">Proyectos activos</div><div class="kpi-value">31</div><div class="kpi-delta down">▼ vs 34 Jul 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Inmobiliarias</div><div class="kpi-value">13</div><div class="kpi-delta neutral">Nov 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Oferta total</div><div class="kpi-value">2.933<span class="kpi-unit">unid</span></div><div class="kpi-delta down">▼ 10,9% vs Jul</div></div>
+    <div class="kpi"><div class="kpi-label">Ventas período</div><div class="kpi-value">68<span class="kpi-unit">unid</span></div><div class="kpi-delta down">▼ vs 195 Jul 2025</div></div>
+  </div>
+  <div class="g2 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">UF/m² y velocidad por tipología</span><span class="sec-badge">Nov 2025</span></div>
+      <div class="chart-wrap" style="height:220px;"><canvas id="ch-tipodpto" role="img" aria-label="Precio UF m2 y velocidad tipología departamentos">Tipologías dptos.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Rendimiento por tramo de m²</span></div>
+      <table class="data-table">
+        <tr><th>Tramo</th><th>Unid.</th><th>% Stock</th><th>UF/m²</th><th>Vel.</th></tr>
+        <tr><td class="bold">30–45 m²</td><td>273</td><td class="warn">34,8%</td><td class="up">68,54</td><td>0,95</td></tr>
+        <tr><td class="bold">45–60 m²</td><td>1.348</td><td class="warn">37,2%</td><td>53,58</td><td class="up">2,00</td></tr>
+        <tr><td class="bold">60–75 m²</td><td>967</td><td class="warn">36,3%</td><td>44,30</td><td>0,98</td></tr>
+        <tr><td class="bold">75–90 m²</td><td>230</td><td class="up">15,2%</td><td>49,68</td><td>0,40</td></tr>
+        <tr><td class="bold">&gt; 90 m²</td><td>115</td><td class="up">20,0%</td><td>53,47</td><td>0,32</td></tr>
+        <tr style="border-top:1px solid var(--border2);"><td class="bold">Total</td><td class="bold">2.933</td><td class="warn">34,3%</td><td class="bold">51,35</td><td class="warn">2,03</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="g3 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Estado de obra (stock)</span></div>
+      <div class="chart-wrap" style="height:180px;"><canvas id="ch-estado-obra" role="img" aria-label="Distribución stock dptos por estado de obra">Estado obra.</canvas></div>
+      <div class="donut-legend">
+        <div class="dl-item"><div class="dl-dot" style="background:#1a6b4a;"></div>Sin ejec. 16,3%</div>
+        <div class="dl-item"><div class="dl-dot" style="background:#7ab648;"></div>Fundaciones 4,8%</div>
+        <div class="dl-item"><div class="dl-dot" style="background:#3ab8a0;"></div>Obra gruesa 12,1%</div>
+        <div class="dl-item"><div class="dl-dot" style="background:#a0c840;"></div>Terminaciones 19,4%</div>
+        <div class="dl-item"><div class="dl-dot" style="background:rgba(255,255,255,0.08);"></div>Terminado 20,7%</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">DS19 vs sin subsidio</span></div>
+      <div class="chart-wrap" style="height:180px;"><canvas id="ch-subsidio" role="img" aria-label="Comparación dptos con DS19 vs sin subsidio">Subsidio.</canvas></div>
+      <div style="margin-top:10px;">
+        <div class="row-stat"><span class="k">Precio DS19</span><span class="v" style="color:var(--up);">42,84 UF/m²</span></div>
+        <div class="row-stat"><span class="k">Vel. DS19 histórica</span><span class="v" style="color:var(--up);">4,24 u/mes</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Participación desarrolladores</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div class="sparkline-row"><span class="sparkline-name">Pocuro</span><div class="mini-track"><div class="mini-fill" style="width:26%;"></div></div><span class="sparkline-val">~207 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Isiete</span><div class="mini-track"><div class="mini-fill" style="width:20%;"></div></div><span class="sparkline-val">~164 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Malpo</span><div class="mini-track"><div class="mini-fill" style="width:16%;"></div></div><span class="sparkline-val">~127 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">FDI</span><div class="mini-track"><div class="mini-fill" style="width:14%;"></div></div><span class="sparkline-val">~112 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Boetsch</span><div class="mini-track"><div class="mini-fill" style="width:13%;"></div></div><span class="sparkline-val">~106 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Brio</span><div class="mini-track"><div class="mini-fill" style="width:9%;"></div></div><span class="sparkline-val">~73 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Independencia</span><div class="mini-track"><div class="mini-fill" style="width:7%;"></div></div><span class="sparkline-val">~56 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Galilea</span><div class="mini-track"><div class="mini-fill" style="width:6%;"></div></div><span class="sparkline-val">~54 unid.</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card mb12">
+    <div class="sec-head"><span class="sec-title">Velocidad acumulada histórica por tipología (u/mes)</span><span class="sec-badge">Nov 2025</span></div>
+    <div class="chart-wrap" style="height:160px;"><canvas id="ch-vel-tipo" role="img" aria-label="Velocidad acumulada por tipología dptos">Vel. tipología.</canvas></div>
+  </div>
+</section>
+
+<!-- CASAS -->
+<section class="section" id="sec-casas">
+  <div class="g4 mb12">
+    <div class="kpi"><div class="kpi-label">Proyectos casas activos</div><div class="kpi-value">15</div><div class="kpi-delta down">▼ vs 19 Jul 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Oferta total casas</div><div class="kpi-value">937<span class="kpi-unit">unid</span></div><div class="kpi-delta down">▼ 28,9% vs Nov 2023</div></div>
+    <div class="kpi"><div class="kpi-label">Precio prom. casas</div><div class="kpi-value">38,14<span class="kpi-unit">UF/m²</span></div><div class="kpi-delta down">▼ vs 38,55 Jul 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Meses stock casas</div><div class="kpi-value">19,2<span class="kpi-unit">meses</span></div><div class="kpi-delta down">▲ desde 10,1 Jul 2025</div></div>
+  </div>
+  <div class="g2 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Evolución mercado casas (2023–2025)</span></div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#7ab648;"></div>Oferta total</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#e86040;"></div>Stock disponible</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#3ab8a0;"></div>Ventas acumuladas</div>
+      </div>
+      <div class="chart-wrap" style="height:200px;"><canvas id="ch-casas-evol" role="img" aria-label="Evolución oferta stock ventas casas Talca 2023 2025">Evolución casas.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">UF/m² por tipología casas</span></div>
+      <div class="chart-wrap" style="height:160px;"><canvas id="ch-casas-tipo" role="img" aria-label="Precio UF m2 tipología casas">Tipologías casas.</canvas></div>
+      <div style="margin-top:12px;">
+        <div class="row-stat"><span class="k">Sup. útil 3D-2B</span><span class="v">87,06 m² · vel. 0,88</span></div>
+        <div class="row-stat"><span class="k">Sup. útil 3D-3B</span><span class="v">83,24 m² · vel. 0,83</span></div>
+        <div class="row-stat"><span class="k">Vel. 2D-1B (DS01)</span><span class="v" style="color:var(--up);">3,32 u/mes</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="g3 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Estado de obra casas (stock)</span></div>
+      <div class="chart-wrap" style="height:180px;"><canvas id="ch-casas-estado" role="img" aria-label="Distribución stock casas estado de obra">Estado obra casas.</canvas></div>
+      <div class="donut-legend">
+        <div class="dl-item"><div class="dl-dot" style="background:#1a6b4a;"></div>Fundaciones 18,6%</div>
+        <div class="dl-item"><div class="dl-dot" style="background:#7ab648;"></div>Obra gruesa 2,1%</div>
+        <div class="dl-item"><div class="dl-dot" style="background:#3ab8a0;"></div>Terminaciones 1,2%</div>
+        <div class="dl-item"><div class="dl-dot" style="background:rgba(255,255,255,0.08);"></div>Terminado 78,1%</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Rendimiento por tramo m² — casas</span></div>
+      <table class="data-table">
+        <tr><th>Tramo</th><th>Unid.</th><th>UF/m²</th><th>Vel.</th><th>% Vend.</th></tr>
+        <tr><td>&lt; 50 m²</td><td>154</td><td>34,89</td><td class="up">1,66</td><td class="up">91,6%</td></tr>
+        <tr><td>50–75 m²</td><td>70</td><td class="up">59,80</td><td>0,69</td><td class="up">91,4%</td></tr>
+        <tr><td>75–100 m²</td><td>531</td><td>41,50</td><td>0,97</td><td class="warn">46,1%</td></tr>
+        <tr><td>100–125 m²</td><td>182</td><td>51,23</td><td>0,75</td><td class="up">84,6%</td></tr>
+        <tr style="border-top:1px solid var(--border2);"><td class="bold">Total</td><td class="bold">937</td><td class="bold">45,43</td><td class="bold">1,33</td><td class="warn">64,5%</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Desarrolladores casas (stock)</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div class="sparkline-row"><span class="sparkline-name">Malpo</span><div class="mini-track"><div class="mini-fill" style="width:50%;"></div></div><span class="sparkline-val">~165 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Pocuro</span><div class="mini-track"><div class="mini-fill" style="width:24%;"></div></div><span class="sparkline-val">~80 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Independencia</span><div class="mini-track"><div class="mini-fill" style="width:19%;"></div></div><span class="sparkline-val">~63 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Habicasa</span><div class="mini-track"><div class="mini-fill" style="width:4%;"></div></div><span class="sparkline-val">~12 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Alto Maule</span><div class="mini-track"><div class="mini-fill" style="width:2%;"></div></div><span class="sparkline-val">~5 unid.</span></div>
+        <div class="sparkline-row"><span class="sparkline-name">Galilea</span><div class="mini-track"><div class="mini-fill" style="width:2%;"></div></div><span class="sparkline-val">~8 unid.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RENTA -->
+<section class="section" id="sec-renta">
+  <div class="g4 mb12">
+    <div class="kpi"><div class="kpi-label">Rent. prom. dptos 1D-1B</div><div class="kpi-value">4,31<span class="kpi-unit">%</span></div><div class="kpi-delta neutral">Estable</div></div>
+    <div class="kpi"><div class="kpi-label">Rent. prom. dptos 2D-2B</div><div class="kpi-value">4,84<span class="kpi-unit">%</span></div><div class="kpi-delta up">Mayor en dptos</div></div>
+    <div class="kpi"><div class="kpi-label">Rent. prom. casas 3D-2B</div><div class="kpi-value">4,56<span class="kpi-unit">%</span></div><div class="kpi-delta up">Casas superan</div></div>
+    <div class="kpi"><div class="kpi-label">Rent. prom. casas 4D-3B</div><div class="kpi-value">5,18<span class="kpi-unit">%</span></div><div class="kpi-delta up">Mejor del mercado</div></div>
+  </div>
+  <div class="g2 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Oferta de arriendo — histórico 2015–2025</span></div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#7ab648;"></div>Dptos</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#3ab8a0;"></div>Casas</div>
+      </div>
+      <div class="chart-wrap" style="height:220px;"><canvas id="ch-renta-evol" role="img" aria-label="Evolución oferta arriendo Talca 2015 2025">Oferta arriendo histórico.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Rentabilidad bruta por tipología</span></div>
+      <div class="chart-wrap" style="height:200px;"><canvas id="ch-rentabilidad" role="img" aria-label="Rentabilidad promedio por tipología">Rentabilidad tipologías.</canvas></div>
+    </div>
+  </div>
+  <div class="g3 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Valor arriendo — dptos (UF/m²)</span></div>
+      <div class="row-stat"><span class="k">1D-1B</span><span class="v">0,27 UF/m² (~UF 10)</span></div>
+      <div class="row-stat"><span class="k">2D-1B</span><span class="v">0,19 UF/m² (~UF 10)</span></div>
+      <div class="row-stat"><span class="k">2D-2B</span><span class="v">0,21 UF/m² (~UF 15)</span></div>
+      <div class="row-stat"><span class="k">3D-1B</span><span class="v">0,18 UF/m² (~UF 10)</span></div>
+      <div class="row-stat"><span class="k">3D-2B</span><span class="v">0,18 UF/m² (~UF 14)</span></div>
+      <div class="row-stat"><span class="k">3D-3B</span><span class="v">0,18 UF/m² (~UF 25)</span></div>
+      <hr style="border:none;border-top:1px solid var(--border2);margin:10px 0;">
+      <div style="font-size:11.5px;color:var(--text3);">Tendencia estable 0,17–0,20 UF/m² desde 2015. Sin crecimientos reales ajustados a inflación.</div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Valor arriendo — casas (UF/m²)</span></div>
+      <div class="row-stat"><span class="k">3D-1B</span><span class="v">0,13 UF/m² (~UF 10)</span></div>
+      <div class="row-stat"><span class="k">3D-2B</span><span class="v">0,15 UF/m² (~UF 16)</span></div>
+      <div class="row-stat"><span class="k">3D-3B</span><span class="v">0,16 UF/m² (~UF 16)</span></div>
+      <div class="row-stat"><span class="k">4D-3B</span><span class="v">0,14 UF/m² (~UF 20)</span></div>
+      <hr style="border:none;border-top:1px solid var(--border2);margin:10px 0;">
+      <div style="font-size:11.5px;color:var(--text3);">Casas tienen menor UF/m² arriendo pero mayor rentabilidad bruta por menor precio relativo de compra.</div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Días permanencia (avisos de arriendo)</span></div>
+      <div class="row-stat"><span class="k">Dptos 1D-1B</span><span class="v">~50 días</span></div>
+      <div class="row-stat"><span class="k">Dptos 2D-1B</span><span class="v">~80 días</span></div>
+      <div class="row-stat"><span class="k">Dptos 2D-2B</span><span class="v">~55 días</span></div>
+      <div class="row-stat"><span class="k">Dptos 3D-2B</span><span class="v">~50 días</span></div>
+      <div class="row-stat"><span class="k">Casas 3D-2B</span><span class="v">~47 días</span></div>
+      <div class="row-stat"><span class="k">Casas 3D-3B</span><span class="v">~48 días</span></div>
+      <div class="row-stat"><span class="k">Casas 4D-3B</span><span class="v">~55 días</span></div>
+      <hr style="border:none;border-top:1px solid var(--border2);margin:10px 0;">
+      <div style="font-size:11.5px;color:var(--text3);">Post-peak 2019 (~140 días dptos), mercado normalizado. Casas con menor permanencia en 2025.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section class="section" id="sec-pipeline">
+  <div class="g4 mb12">
+    <div class="kpi"><div class="kpi-label">Permisos aprobados 2025</div><div class="kpi-value">9</div><div class="kpi-delta neutral">Ago–Nov 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Unidades en permisos</div><div class="kpi-value">967<span class="kpi-unit">resid.</span></div><div class="kpi-delta neutral">+ 9 ofic. + 23 loc.</div></div>
+    <div class="kpi"><div class="kpi-label">Anteproyectos</div><div class="kpi-value">5</div><div class="kpi-delta neutral">250 viviendas</div></div>
+    <div class="kpi"><div class="kpi-label">Proyectos DS19 MINVU 2025</div><div class="kpi-value">3</div><div class="kpi-delta up">577 unidades</div></div>
+  </div>
+  <div class="card mb12">
+    <div class="sec-head"><span class="sec-title">Permisos de edificación aprobados 2025</span><span class="sec-badge">Municipalidad de Talca</span></div>
+    <table class="data-table">
+      <tr><th>#</th><th>Propietario</th><th>Tipo</th><th>Dirección</th><th>Viviendas</th><th>Sup. prom. m²</th><th>Sup. total m²</th></tr>
+      <tr><td>1</td><td>SOC. Trepen SPA</td><td><span class="badge b-info">COMERCIO</span></td><td>Ruta K 611 S/N</td><td>0</td><td>102,6</td><td>918,8</td></tr>
+      <tr><td>2</td><td>Inm. Hac. Esmeralda</td><td><span class="badge b-warn">CASAS</span></td><td>Calle 1 Norte 4752</td><td class="bold">33</td><td>85,6</td><td>2.826</td></tr>
+      <tr><td>3</td><td>Constructora FJ SA</td><td><span class="badge b-up">DPTOS</span></td><td>Calle 38 Oriente 442</td><td class="bold">140</td><td>71,4</td><td>10.137</td></tr>
+      <tr><td>4</td><td>Independencia SPA</td><td><span class="badge b-up">DPTOS</span></td><td>Av. Batalla de Lircay</td><td class="bold up">238</td><td>67,4</td><td>16.457</td></tr>
+      <tr><td>5</td><td>Inmobiliaria Incas</td><td><span class="badge b-info">OFICINAS</span></td><td>Calle 1 Norte 540</td><td>0</td><td>370,5</td><td>1.111</td></tr>
+      <tr><td>6</td><td>Independencia SPA</td><td><span class="badge b-up">DPTOS</span></td><td>Calle 32 Oriente 3597</td><td class="bold">25</td><td>82,4</td><td>2.059</td></tr>
+      <tr><td>7</td><td>Inm. e Inv. Malpo</td><td><span class="badge b-warn">CASAS</span></td><td>Av. Las Rastras 3500</td><td class="bold up">252</td><td>99,1</td><td>25.636</td></tr>
+      <tr><td>8</td><td>Independencia SPA</td><td><span class="badge b-up">DPTOS</span></td><td>Calle 21 Norte 4055</td><td class="bold">235</td><td>59,4</td><td>17.476</td></tr>
+      <tr><td>9</td><td>Inm. Hac. Esmeralda</td><td><span class="badge b-warn">CASAS</span></td><td>Calle 51 Oriente 970</td><td>44</td><td>92,5</td><td>4.071</td></tr>
+    </table>
+  </div>
+  <div class="g2 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Anteproyectos de edificación (Oct 2025)</span></div>
+      <table class="data-table">
+        <tr><th>Propietario</th><th>Tipo</th><th>Dirección</th><th>Viviendas</th><th>Sup. prom.</th></tr>
+        <tr><td>Penta Vida</td><td><span class="badge b-info">COMERCIO</span></td><td>Av. Del Agua 2764</td><td>0</td><td>254,2 m²</td></tr>
+        <tr><td>Cons. e Inv. Oval</td><td><span class="badge b-up">DPTOS</span></td><td>Calle 6 Sur 165</td><td class="bold">144</td><td>57,7 m²</td></tr>
+        <tr><td>Inm. San Miguel</td><td><span class="badge b-info">COMERCIO</span></td><td>Av. San Miguel 2830</td><td>0</td><td>35,5 m²</td></tr>
+        <tr><td>Inv. Independencia</td><td><span class="badge b-warn">CASAS</span></td><td>Av. San Valentín 3673</td><td class="bold">92</td><td>82,9 m²</td></tr>
+        <tr><td>Inv. Independencia</td><td><span class="badge b-warn">CASAS</span></td><td>Calle 54 Oriente 1145</td><td>14</td><td>167,4 m²</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">DS19 aprobados — MINVU 2025</span><span class="sec-badge">Llamado 2025</span></div>
+      <table class="data-table">
+        <tr><th>Proyecto</th><th>Propietario</th><th>Tipo</th><th>Total</th><th>Vulnerable</th><th>S. Medios</th></tr>
+        <tr><td class="bold">Batalla de Lircay II</td><td>Independencia SPA</td><td><span class="badge b-warn">CASAS</span></td><td class="bold up">296</td><td>76</td><td>220</td></tr>
+        <tr><td class="bold">Valles San Valentín II</td><td>Independencia SPA</td><td><span class="badge b-up">DPTOS</span></td><td class="bold">141</td><td>38</td><td>103</td></tr>
+        <tr><td class="bold">Lily Garafulic</td><td>Inm. Ferval Ltda</td><td><span class="badge b-up">DPTOS</span></td><td class="bold">140</td><td>43</td><td>97</td></tr>
+      </table>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--text3);">577 unidades totales · Independencia SPA lidera con 2 de 3 proyectos.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROYECTOS -->
+<section class="section" id="sec-proyectos">
+  <div class="g2 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Top dptos — mayor velocidad histórica</span></div>
+      <table class="data-table">
+        <tr><th>Proyecto</th><th>Inmob.</th><th>Sub.</th><th>UF/m²</th><th>Vel.</th><th>% Vend.</th></tr>
+        <tr><td class="bold">Ed. Valles San Valentín</td><td>Independencia</td><td><span class="badge b-up">DS19</span></td><td>44,38</td><td class="up bold">10,36</td><td class="up">97,5%</td></tr>
+        <tr><td class="bold">Cond. Arrayán</td><td>Pocuro</td><td>—</td><td>45,39</td><td class="up">3,77</td><td>23,8%</td></tr>
+        <tr><td class="bold">Cond. Altos Lircay II</td><td>Pocuro</td><td>—</td><td>45,22</td><td class="up">3,71</td><td class="up">84,8%</td></tr>
+        <tr><td class="bold">Vista Parque III</td><td>Isiete</td><td><span class="badge b-up">DS19</span></td><td>48,58</td><td class="up">3,66</td><td>13,7%</td></tr>
+        <tr><td class="bold">Praderas de Talca</td><td>Brio</td><td><span class="badge b-up">DS19</span></td><td>32,86</td><td class="up">3,65</td><td class="up">99,1%</td></tr>
+        <tr><td class="bold">Pilares de Talca</td><td>Brio</td><td><span class="badge b-up">DS19</span></td><td>38,47</td><td>2,89</td><td>55,4%</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Top dptos — mayor precio UF/m²</span></div>
+      <table class="data-table">
+        <tr><th>Proyecto</th><th>Inmob.</th><th>UF/m²</th><th>Vel.</th><th>% Vend.</th></tr>
+        <tr><td class="bold">Ed. Hac. Esmeralda III</td><td>Independencia</td><td class="up bold">72,21</td><td>2,48</td><td class="up">97,1%</td></tr>
+        <tr><td class="bold">Ed. Cordillera</td><td>Digua</td><td class="up">70,79</td><td>0,77</td><td class="up">91,3%</td></tr>
+        <tr><td class="bold">Barrio Alameda I</td><td>Barrio Alameda</td><td class="up">68,71</td><td>1,53</td><td class="up">98,5%</td></tr>
+        <tr><td class="bold">Raíces</td><td>FAI</td><td>67,09</td><td>1,00</td><td>87,8%</td></tr>
+        <tr><td class="bold">5 Norte Las Rastras</td><td>Digua</td><td>64,48</td><td>1,21</td><td class="up">98,9%</td></tr>
+        <tr><td class="bold">Doña Josefa</td><td>Malpo</td><td>63,49</td><td>1,73</td><td>55,0%</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="g2 mb12">
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Top casas — velocidad histórica</span></div>
+      <table class="data-table">
+        <tr><th>Proyecto</th><th>Inmob.</th><th>UF/m²</th><th>Vel.</th><th>% Vend.</th><th>Terreno</th></tr>
+        <tr><td class="bold">Cond. Hac. Esmeralda II</td><td>Independencia</td><td class="up">52,72</td><td class="up bold">2,52</td><td>38,6%</td><td>250 m²</td></tr>
+        <tr><td class="bold">Bicentenario Centro</td><td>Independencia</td><td>—</td><td class="up">2,49</td><td class="up">100%</td><td>188 m²</td></tr>
+        <tr><td class="bold">El Portal Talca II</td><td>Habicasa</td><td>32,01</td><td class="up">2,33</td><td class="up">91,1%</td><td>160 m²</td></tr>
+        <tr><td class="bold">Cond. Parque S. Valentín</td><td>Independencia</td><td>42,39</td><td>1,52</td><td>27,1%</td><td>179 m²</td></tr>
+        <tr><td class="bold">Alto Manque I</td><td>Malpo</td><td class="up">53,59</td><td>1,47</td><td class="up">91,3%</td><td>363 m²</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="sec-head"><span class="sec-title">Proyectos con mayor stock residual (dptos)</span></div>
+      <table class="data-table">
+        <tr><th>Proyecto</th><th>Stock</th><th>% Stock</th><th>Vel. per.</th><th>Estado</th></tr>
+        <tr><td class="bold">Vista Parque III</td><td class="down">164</td><td class="down">86,3%</td><td class="up">3,69</td><td><span class="badge b-info">Sin ejec.</span></td></tr>
+        <tr><td class="bold">Cond. Arrayán</td><td class="down">122</td><td class="down">76,3%</td><td class="up">4,18</td><td><span class="badge b-warn">Excavac.</span></td></tr>
+        <tr><td class="bold">Edificio DockSur</td><td class="down">112</td><td class="down">80,0%</td><td>1,72</td><td><span class="badge b-warn">O.Gruesa</span></td></tr>
+        <tr><td class="bold">Camino al Agua</td><td class="down">109</td><td class="down">68,1%</td><td>1,48</td><td><span class="badge b-warn">Terminac.</span></td></tr>
+        <tr><td class="bold">Jardín Norte</td><td class="down">106</td><td class="down">66,3%</td><td>0,98</td><td><span class="badge b-up">DS19</span></td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+
+</main>
+
+<footer class="footer">
+  Estudio de Mercado Habitacional Talca · BMI Servicios Inmobiliarios · Jul 2025 – Nov 2025
+</footer>
+</div>
+
+<script>
+// ===== LOGIN =====
+function doLogin() {
+  const pwd = document.getElementById('pwd-input').value;
+  const err = document.getElementById('login-err');
+  if (pwd === 'comercial2026') {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initCharts();
+  } else {
+    err.textContent = 'Contraseña incorrecta. Intentá nuevamente.';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+    setTimeout(() => { err.textContent = ''; }, 3000);
+  }
+}
+function doLogout() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pwd-input').value = '';
+}
+
+// ===== TABS =====
+function showTab(id, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('sec-' + id).classList.add('active');
+}
+
+// ===== CHARTS =====
+const periods9 = ['Mar 23','Jul 23','Nov 23','Mar 24','Jul 24','Nov 24','Mar 25','Jul 25','Nov 25'];
+const tCol = 'rgba(138,184,153,0.4)';
+const gCol = 'rgba(255,255,255,0.05)';
+const tooltip = { backgroundColor: '#122018', titleColor: '#e8f5e0', bodyColor: '#8ab899', borderColor: 'rgba(122,182,72,0.2)', borderWidth: 1 };
+const baseOpts = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { display: false }, tooltip },
+  scales: {
+    x: { ticks: { color: tCol, font: { size: 10, family: 'DM Sans' } }, grid: { color: gCol } },
+    y: { ticks: { color: tCol, font: { size: 10, family: 'DM Sans' } }, grid: { color: gCol } }
+  }
+};
+
+let chartsInited = false;
+function initCharts() {
+  if (chartsInited) return;
+  chartsInited = true;
+
+  new Chart(document.getElementById('ch-evolucion'), {
+    type: 'line',
+    data: {
+      labels: periods9,
+      datasets: [
+        { label: 'Oferta total', data: [3021,3442,3786,3431,2909,2920,3162,3290,2933], borderColor: '#7ab648', backgroundColor: 'rgba(122,182,72,0.07)', fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#7ab648' },
+        { label: 'Stock', data: [981,1285,1229,995,985,1043,1140,1083,1006], borderColor: '#e86040', backgroundColor: 'rgba(232,96,64,0.06)', fill: true, tension: 0.4, borderDash: [5,3], pointRadius: 3, pointBackgroundColor: '#e86040' },
+        { label: 'Ventas acum.', data: [2040,2157,2557,2436,1924,1877,2022,2207,1927], borderColor: '#3ab8a0', backgroundColor: 'rgba(58,184,160,0.04)', fill: false, tension: 0.4, pointRadius: 2 }
+      ]
+    },
+    options: { ...baseOpts }
+  });
+
+  new Chart(document.getElementById('ch-vel'), {
+    type: 'bar',
+    data: {
+      labels: periods9,
+      datasets: [
+        { label: 'Vel. histórica', data: [3.29,3.15,4.57,3.99,3.02,2.44,3.13,2.49,2.03], backgroundColor: 'rgba(122,182,72,0.7)', borderRadius: 3 },
+        { label: 'Vel. período', data: [2.52,2.25,3.66,1.41,0.43,1.07,2.06,1.18,0.56], backgroundColor: 'rgba(232,96,64,0.7)', borderRadius: 3 }
+      ]
+    },
+    options: { ...baseOpts }
+  });
+
+  new Chart(document.getElementById('ch-tipodpto'), {
+    type: 'bar',
+    data: {
+      labels: ['1D-1B','2D-1B','2D-2B','3D-1B','3D-2B','3D-3B','4D-4B'],
+      datasets: [
+        { label: 'UF/m²', data: [68.5,51.3,56.2,41.3,45.4,64.5,70.8], backgroundColor: 'rgba(122,182,72,0.75)', borderRadius: 3, yAxisID: 'y' },
+        { label: 'Vel. acum.', data: [0.92,0.74,1.01,null,1.06,0.38,0.58], type: 'line', borderColor: '#f0b429', backgroundColor: 'transparent', tension: 0.3, pointRadius: 5, yAxisID: 'y2', borderWidth: 2 }
+      ]
+    },
+    options: {
+      ...baseOpts,
+      scales: {
+        x: { ticks: { color: tCol, font: { size: 10 } }, grid: { color: gCol } },
+        y: { ticks: { color: tCol, font: { size: 10 } }, grid: { color: gCol }, position: 'left' },
+        y2: { ticks: { color: 'rgba(240,180,41,0.5)', font: { size: 10 } }, grid: { display: false }, position: 'right' }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('ch-estado-obra'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Sin ejec.','Fundaciones','Obra gruesa','Terminaciones','Terminado'],
+      datasets: [{ data: [164,48,122,195,207], backgroundColor: ['#1a6b4a','#7ab648','#3ab8a0','#a0c840','rgba(255,255,255,0.08)'], borderWidth: 1, borderColor: '#122018' }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip }, cutout: '60%' }
+  });
+
+  new Chart(document.getElementById('ch-subsidio'), {
+    type: 'bar',
+    data: {
+      labels: ['UF/m²','Vel. hist.','Ticket÷100'],
+      datasets: [
+        { label: 'Con DS19', data: [42.84,4.24,24.12], backgroundColor: 'rgba(122,182,72,0.75)', borderRadius: 3 },
+        { label: 'Sin subsidio', data: [52.41,1.50,31.44], backgroundColor: 'rgba(58,184,160,0.7)', borderRadius: 3 }
+      ]
+    },
+    options: { ...baseOpts }
+  });
+
+  new Chart(document.getElementById('ch-vel-tipo'), {
+    type: 'bar',
+    data: {
+      labels: ['1D-1B','2D-1B','2D-2B','2D-3B','3D-1B','3D-2B','3D-3B','4D-4B'],
+      datasets: [{ label: 'Vel. acum. u/mes', data: [10.13,9.56,16.22,0.27,9.57,26.62,0.38,0.58], backgroundColor: ['#7ab648','#7ab648','#a0c840','#e86040','#7ab648','#3ab8a0','#e86040','#e86040'], borderRadius: 4 }]
+    },
+    options: { ...baseOpts }
+  });
+
+  new Chart(document.getElementById('ch-casas-evol'), {
+    type: 'line',
+    data: {
+      labels: ['Nov 23','Mar 24','Jul 24','Nov 24','Mar 25','Jul 25','Nov 25'],
+      datasets: [
+        { label: 'Oferta', data: [2000,1911,1832,1331,1225,1317,937], borderColor: '#7ab648', backgroundColor: 'rgba(122,182,72,0.07)', fill: true, tension: 0.4, pointRadius: 3 },
+        { label: 'Stock', data: [603,437,351,393,391,405,333], borderColor: '#e86040', borderDash: [5,3], backgroundColor: 'rgba(232,96,64,0.05)', fill: true, tension: 0.4, pointRadius: 3 },
+        { label: 'Ventas', data: [1397,1474,1481,938,834,912,604], borderColor: '#3ab8a0', fill: false, tension: 0.4, pointRadius: 2 }
+      ]
+    },
+    options: { ...baseOpts }
+  });
+
+  new Chart(document.getElementById('ch-casas-tipo'), {
+    type: 'bar',
+    data: {
+      labels: ['2D-1B','2D-2B','3D-1B','3D-2B','3D-3B','4D-3B'],
+      datasets: [{ label: 'UF/m²', data: [34.98,66.21,0,44.26,48.57,46.05], backgroundColor: 'rgba(58,184,160,0.75)', borderRadius: 3 }]
+    },
+    options: { ...baseOpts, indexAxis: 'y' }
+  });
+
+  new Chart(document.getElementById('ch-casas-estado'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Fundaciones','Obra gruesa','Terminaciones','Terminado'],
+      datasets: [{ data: [62,7,4,260], backgroundColor: ['#1a6b4a','#7ab648','#3ab8a0','rgba(255,255,255,0.06)'], borderWidth: 1, borderColor: '#122018' }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip }, cutout: '60%' }
+  });
+
+  new Chart(document.getElementById('ch-renta-evol'), {
+    type: 'line',
+    data: {
+      labels: ['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'],
+      datasets: [
+        { label: 'Dptos', data: [55,60,65,85,100,55,100,230,290,310,350], borderColor: '#7ab648', backgroundColor: 'rgba(122,182,72,0.06)', fill: true, tension: 0.4, pointRadius: 2 },
+        { label: 'Casas', data: [55,58,62,85,95,60,80,195,260,285,240], borderColor: '#3ab8a0', backgroundColor: 'rgba(58,184,160,0.05)', fill: true, tension: 0.4, pointRadius: 2, borderDash: [4,3] }
+      ]
+    },
+    options: { ...baseOpts }
+  });
+
+  new Chart(document.getElementById('ch-rentabilidad'), {
+    type: 'bar',
+    data: {
+      labels: ['D:1D-1B','D:2D-1B','D:2D-2B','D:3D-1B','D:3D-2B','D:3D-3B','C:3D-2B','C:3D-3B','C:4D-3B'],
+      datasets: [{ label: 'Rentabilidad %', data: [4.31,4.40,4.84,4.46,4.16,3.35,4.56,4.29,5.18], backgroundColor: ['rgba(122,182,72,0.7)','rgba(122,182,72,0.7)','rgba(160,200,64,0.85)','rgba(122,182,72,0.7)','rgba(122,182,72,0.7)','rgba(232,96,64,0.7)','rgba(58,184,160,0.7)','rgba(58,184,160,0.7)','rgba(58,184,160,0.9)'], borderRadius: 4 }]
+    },
+    options: {
+      ...baseOpts,
+      scales: {
+        x: { ticks: { color: tCol, font: { size: 9 } }, grid: { color: gCol } },
+        y: { ticks: { color: tCol, font: { size: 10 }, callback: v => v + '%' }, grid: { color: gCol }, min: 2.5 }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>
